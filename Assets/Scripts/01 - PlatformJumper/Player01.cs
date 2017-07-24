@@ -1,14 +1,14 @@
-﻿using UnityEngine;			// To inherit from MonoBehaviour 
+﻿using UnityEngine;					// To inherit from MonoBehaviour 
 
-public class PlayerController : MonoBehaviour {
+public class Player01 : MonoBehaviour {
 
-	private bool _onGround;
+	private bool _onGround;			// Is the player on the ground?
 
 
 #region // Functions
 	// Determine whether the player is eligible to jump
 	private bool CanJump {
-		get{return _onGround && gameObject.transform.localPosition.y >= -0.02f;}
+		get{return !Game01.Ended && _onGround && gameObject.transform.localPosition.y >= -0.05f;}
 	}
 	// From the jump height and gravity we deduce the upwards speed for the character to reach at the apex
 	public static float JumpSpeed {
@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Runs when player is added to scene
 	void Start() {
-		GameController.Player = gameObject;
+		Game01.Player = gameObject;
 	}
 
 	// Runs every frame
@@ -29,11 +29,12 @@ public class PlayerController : MonoBehaviour {
 				Jump();
 			}
 		}
-		if(GameController.Lost) {
+		if(Game01.Lost) {
 			gameObject.SetActive(false);
 		}
 	}
 
+	// Player jumps
 	private void Jump() {
 		Vector3 velocity = gameObject.GetComponent<Rigidbody>().velocity;
 		velocity.y = JumpSpeed;
@@ -41,20 +42,19 @@ public class PlayerController : MonoBehaviour {
 		_onGround = false;
 	}
 
+	// Case switch the collision event to determine outcome
 	void OnCollisionEnter(Collision col) {
 		switch(col.gameObject.name) {
 			case "Platform":
 				_onGround = true;
-				break;
-			case "Bullet":
-
-				break;
-			case "Coin":
-
+				if(CanJump) {
+					Game01.PlayerLand(col.transform.parent.gameObject.GetComponent<Platform01>());
+				}
 				break;
 		}
 	}
 
+	// Case switch the collision event to determine outcome
 	void OnCollisionExit(Collision col) {
 		switch(col.gameObject.name) {
 			case "Platform":

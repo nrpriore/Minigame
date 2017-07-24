@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-//using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Image))]
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 public class ScrollSnapRect : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
 
     [Tooltip("Set starting page index - starting from 0")]
-    public int startingPage = 0;
+    public int startingPage;
     [Tooltip("Threshold time for fast swipe in seconds")]
     public float fastSwipeThresholdTime = 0.3f;
     [Tooltip("Threshold time for fast swipe in (unscaled) pixels")]
@@ -66,13 +65,15 @@ public class ScrollSnapRect : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     private List<Image> _pageSelectionImages;
 
     //------------------------------------------------------------------------
+    void Awake() {
+        startingPage = (MenuController.IsFreePlay)? 2 : 1;
+    }
+
     void Start() {
         _scrollRectComponent = GetComponent<ScrollRect>();
         _scrollRectRect = GetComponent<RectTransform>();
         _container = _scrollRectComponent.content;
         _pageCount = _container.childCount;
-        //_selectedTabRT = (RectTransform)GameObject.Find("SelectedTab").transform;
-        //_selectedTabRT.sizeDelta = new Vector2(Screen.width/_pageCount,_selectedTabRT.sizeDelta.y);
 
         // is it horizontal or vertical scrollrect
         if (_scrollRectComponent.horizontal && !_scrollRectComponent.vertical) {
@@ -186,7 +187,7 @@ public class ScrollSnapRect : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
     //------------------------------------------------------------------------
     private void SetNicksScrollBar() {
-        scrollBar.size = (1f + MenuController.WIDTH_RATIO)/(_pageCount + MenuController.WIDTH_RATIO);
+        scrollBar.size = (1f + MenuTabController.WIDTH_RATIO)/(_pageCount + MenuTabController.WIDTH_RATIO);
     }
 
     //------------------------------------------------------------------------
@@ -195,7 +196,7 @@ public class ScrollSnapRect : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         _container.anchoredPosition = _pagePositions[aPageIndex];
         scrollBar.value = _tabPositions[aPageIndex];
         _currentPage = aPageIndex;
-        MenuController.SetTab(aPageIndex);
+        MenuTabController.SetTab(aPageIndex);
     }
 
     //------------------------------------------------------------------------
@@ -205,7 +206,7 @@ public class ScrollSnapRect : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         _lerpTabTo = _tabPositions[aPageIndex];
         _lerp = true;
         _currentPage = aPageIndex;
-        MenuController.SetTab(aPageIndex);
+        MenuTabController.SetTab(aPageIndex);
     }
 
     //------------------------------------------------------------------------

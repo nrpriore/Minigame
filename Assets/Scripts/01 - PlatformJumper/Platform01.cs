@@ -1,15 +1,17 @@
-﻿using UnityEngine;			// To inherit from MonoBehaviour 
+﻿using UnityEngine;					// To inherit from MonoBehaviour 
 
-public class PlatformController : MonoBehaviour {
+public class Platform01 : MonoBehaviour {
 
+	public int ID;
+	public bool Landed;
 	public float PWidth;
 
 	// Creates a platform with size parameter for scale of middle piece
 	public void CreatePlatform(int size) {
 		// Load the objects from resources
-		GameObject pLeft	= Resources.Load<GameObject>("Components/PLeft");
-		GameObject pMid 	= Resources.Load<GameObject>("Components/PMid");
-		GameObject pRight 	= Resources.Load<GameObject>("Components/PRight");
+		GameObject pLeft	= Resources.Load<GameObject>("01/Components/PLeft");
+		GameObject pMid 	= Resources.Load<GameObject>("01/Components/PMid");
+		GameObject pRight 	= Resources.Load<GameObject>("01/Components/PRight");
 		// Instantiate the objects into the scene with parent gameobject
 		pLeft 	= Instantiate(pLeft ,gameObject.transform) as GameObject;
 		pMid 	= Instantiate(pMid  ,gameObject.transform) as GameObject;
@@ -32,13 +34,16 @@ public class PlatformController : MonoBehaviour {
 		PWidth = 	pLeft.GetComponent<MeshRenderer>().bounds.size.x + 
 					pMid.GetComponent<MeshRenderer>().bounds.size.x + 
 					pRight.GetComponent<MeshRenderer>().bounds.size.x;
+		ID = Game01.NumPlatforms;
 	}
 	
 	// Runs every frame
 	void Update () {
-		if(!GameController.Lost) {
-			transform.localPosition -= Vector3.right * GameController.SpeedMult;
+		if(!Game01.Ended) {
+			transform.localPosition -= Vector3.right * Game01.SpeedMult;
+		}
+		if(gameObject.transform.localPosition.x <= -2f * Game01.PlatformStartX) {
+			Destroy(gameObject);
 		}
 	}
-
 }
