@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;	// To change scenes
 
 public class Game01 : MonoBehaviour {
 
+	// To reference self
+	public static Game01 Main;
 	// Gameplay constants
 	private const float MAX_TIME 			= 45.999f;
 	private const float MIN_MULT 			= 10f;
@@ -13,33 +15,33 @@ public class Game01 : MonoBehaviour {
 	private const float COUNTDOWN			= 3.999f;
 
 	// Gameplay variables
-	public static GameObject Player;			// The player's gameobject
-	public static bool Ended;					// If the game has ended
-	public static bool CountingDown;			// If the game is counting down
-	private static float _timer;				// Current duration of game
-	private static Platform01 _finalPlatform;	// Platform that spawns when no time left
+	public GameObject Player;			// The player's gameobject
+	public bool Ended;					// If the game has ended
+	public bool CountingDown;			// If the game is counting down
+	private float _timer;				// Current duration of game
+	private Platform01 _finalPlatform;	// Platform that spawns when no time left
 
 	// UI variables
-	public static float PlatformStartX;
+	public float PlatformStartX;
 	private Transform _prevPlatform;
 
 	// Canvas UI variables
-	public static Text GOTimeRem;
-	public static Text GONumPlatforms;
-	public static GameObject GOMenu;
-	public static GameObject GORestart;
-	public static Text GOCountdown;
+	public Text GOTimeRem;
+	public Text GONumPlatforms;
+	public GameObject GOMenu;
+	public GameObject GORestart;
+	public Text GOCountdown;
 
 	// Stats
-	public static int NumPlatforms;
+	public int NumPlatforms;
 
 
 #region // Functions
 	// Alters speed variable into a value usable by the game
-	public static float UISpeedMult {
+	public float UISpeedMult {
 		get{return Mathf.Min(MIN_MULT + (TimeRatio * MULT_RANGE), MIN_MULT + MULT_RANGE);}
 	}
-	public static float SpeedMult {
+	public float SpeedMult {
 		get{return UISpeedMult / 100f;}
 	}
 	// Returns the size of the gap between platforms based on game speed
@@ -56,11 +58,11 @@ public class Game01 : MonoBehaviour {
 		get{return (int)(COUNTDOWN - _timer);}
 	}
 	// Returns % of max game speed (0 - 1)
-	private static float TimeRatio {
+	private float TimeRatio {
 		get{return Mathf.Min(_timer / (PERCENT_TO_MAX_MULT * MAX_TIME),1f);}
 	}
 	// Returns when player has lost
-	public static bool Lost {
+	public bool Lost {
 		get{return (Player.transform.localPosition.y <= -20f) || !Player.activeSelf;}
 	}
 #endregion
@@ -68,14 +70,10 @@ public class Game01 : MonoBehaviour {
 
 	// Runs on game start
 	void Start() {
+		Main = this;
 		// Init vars
-		GOTimeRem = GameObject.Find("TimeNum").GetComponent<Text>();
-		GONumPlatforms = GameObject.Find("PlatformNum").GetComponent<Text>();
-		GOMenu = GameObject.Find("Menu");
 		GOMenu.SetActive(false);
-		GORestart = GameObject.Find("Restart");
 		GORestart.SetActive(false);
-		GOCountdown = GameObject.Find("CountdownTime").GetComponent<Text>();
 		_timer = 0f;
 		NumPlatforms = 0;
 		PlatformStartX = 10f * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad) * (Camera.main.aspect * 1.5f);
@@ -137,7 +135,7 @@ public class Game01 : MonoBehaviour {
 	}
 
 	// Runs when collision with platforms
-	public static void PlayerLand(Platform01 _platform) {
+	public void PlayerLand(Platform01 _platform) {
 		if(_platform.Landed || _platform.ID == 0) {
 			return;
 		}
@@ -150,7 +148,7 @@ public class Game01 : MonoBehaviour {
 		}
 	}
 
-	private static void EndGame() {
+	private void EndGame() {
 		Ended = true;
 		GOMenu.SetActive(true);
 		if(MenuController.IsFreePlay) {

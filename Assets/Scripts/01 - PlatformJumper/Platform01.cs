@@ -34,15 +34,15 @@ public class Platform01 : MonoBehaviour {
 		PWidth = 	pLeft.GetComponent<MeshRenderer>().bounds.size.x + 
 					pMid.GetComponent<MeshRenderer>().bounds.size.x + 
 					pRight.GetComponent<MeshRenderer>().bounds.size.x;
-		ID = Game01.NumPlatforms;
+		ID = Game01.Main.NumPlatforms;
 	}
 	
 	// Runs every frame
 	void Update () {
-		if(!Game01.Ended) {
-			transform.localPosition -= Vector3.right * Game01.SpeedMult;
+		if(!Game01.Main.Ended) {
+			transform.localPosition -= Vector3.right * Game01.Main.SpeedMult;
 		}
-		if(gameObject.transform.localPosition.x <= -2f * Game01.PlatformStartX) {
+		if(gameObject.transform.localPosition.x <= -2f * Game01.Main.PlatformStartX) {
 			Destroy(gameObject);
 		}
 	}

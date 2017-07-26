@@ -8,7 +8,7 @@ public class Player01 : MonoBehaviour {
 #region // Functions
 	// Determine whether the player is eligible to jump
 	private bool CanJump {
-		get{return !Game01.Ended && _onGround && gameObject.transform.localPosition.y >= -0.05f;}
+		get{return !Game01.Main.Ended && _onGround && gameObject.transform.localPosition.y >= -0.05f;}
 	}
 	// From the jump height and gravity we deduce the upwards speed for the character to reach at the apex
 	public static float JumpSpeed {
@@ -19,7 +19,7 @@ public class Player01 : MonoBehaviour {
 
 	// Runs when player is added to scene
 	void Start() {
-		Game01.Player = gameObject;
+		Game01.Main.Player = gameObject;
 	}
 
 	// Runs every frame
@@ -29,7 +29,7 @@ public class Player01 : MonoBehaviour {
 				Jump();
 			}
 		}
-		if(Game01.Lost) {
+		if(Game01.Main.Lost) {
 			gameObject.SetActive(false);
 		}
 	}
@@ -48,7 +48,7 @@ public class Player01 : MonoBehaviour {
 			case "Platform":
 				_onGround = true;
 				if(CanJump) {
-					Game01.PlayerLand(col.transform.parent.gameObject.GetComponent<Platform01>());
+					Game01.Main.PlayerLand(col.transform.parent.gameObject.GetComponent<Platform01>());
 				}
 				break;
 		}
