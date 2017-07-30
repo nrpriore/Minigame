@@ -82,7 +82,7 @@ public class Game01 : MonoBehaviour {
 		CountingDown = true;
 		// Init objects
 		CreatePlatform();
-		Player = Instantiate(Resources.Load("Player")) as GameObject;
+		Player = Instantiate(Resources.Load("01/Prefabs/Player")) as GameObject;
 	}
 
 	// Creates platform based on game variables
