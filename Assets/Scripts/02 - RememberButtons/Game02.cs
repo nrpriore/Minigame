@@ -9,8 +9,8 @@ public class Game02 : MonoBehaviour {
 	public const int MAX_HP 				= 5;
 	public const int LENGTH					= 8;
 	private const float MEM_TIME			= 4.999f;
-	private const float GUESS_TIME			= 6.999f;
-	private const float CHECK_TIME			= 6.999f;
+	private const float GUESS_TIME			= 4.999f;
+	private const float CHECK_TIME			= 5.999f;
 	private const int MAX_ROUNDS			= 5;
 	private const int DIFF_CAP				= 3;
 	private const float RATIO_SPAWN_TO_MAX	= 0.85f;
@@ -62,12 +62,15 @@ public class Game02 : MonoBehaviour {
 		get{return Mathf.Max(DIFF_CAP - _difficulty, 0);}
 	}
 	private bool EndOfGame {
-		get{foreach(Player02 player in Players) {
-			if(player.HP > 0) {
-				return false;
+		get{
+			int playersRemaining = 0; 
+			foreach(Player02 player in Players) {
+				if(player.HP > 0) {
+					playersRemaining++;
+				}
 			}
+			return (playersRemaining > 1)? false : true;
 		}
-		return true;}
 	}
 #endregion
 
